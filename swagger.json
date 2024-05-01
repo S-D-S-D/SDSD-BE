@@ -1,0 +1,30 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "SPOB",
+        "description": "API for SPOB",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "description": "Returns the main page",
+                "responses": {
+                    "200": {
+                        "description": "Successful response"
+                    }
+                }
+            }
+        }
+    },
+    "/auth": {
+        "get": {
+            "description": "Returns the sign in/up/out form",
+            "responses": {
+                "200": {
+                    "description": "Successful response"
+                }
+            }
+        }
+    }
+}
