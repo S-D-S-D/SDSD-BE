@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
-import { router as authRouter } from './auth/auth';
+import { router as authRouter } from './routes/auth';
 
 dotenv.config();
 
