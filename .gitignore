@@ -1,3 +1,4 @@
 /server/node_modules
 /repo
 /server/.env
+/server/dist

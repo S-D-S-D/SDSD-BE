@@ -1,66 +1,50 @@
+// src/routes/auth.ts
 import express from 'express';
 import axios from 'axios';
 import dotenv from 'dotenv';
 
-dotenv.config();// »ç½Ç ¹ºÁö Àß ¸ğ¸£°ÚÀ½ envÆÄÀÏÀ» ºÒ·¯¿Â´ÙÇÔ
+dotenv.config();
 const router = express.Router();
 
-
-router.get('/login/kakao', (req, res) => {
-  const redirectUri = `${process.env.HOST}/auth/login/kakao/callback`;
-  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REST_API_KEY}&redirect_uri=${redirectUri}&response_type=code&scope=profile_nickname,gender`;
-  // ¸¶Áö¸·¿¡ scope·Î Ãß°¡ µ¿ÀÇ Ç×¸ñÀ» Ãß°¡
-  res.redirect(kakaoAuthUrl);// kakaoAuthUrl·Î redirectÇÏ±â
+router.get('/kakao', (req, res) => {
+  const redirectUri = `${process.env.HOST}/auth/kakao/callback`;
+  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REST_API_KEY}&redirect_uri=${redirectUri}&response_type=code&scope=profile_nickname,gender,account_email`;
+  
+  res.redirect(kakaoAuthUrl);
 });
-//
-router.get('/login/kakao/callback', async (req, res) => {
+
+router.get('/kakao/callback', async (req, res) => {
   let token: any;
   try {
-    const { code } = req.query; // ÀÎÁõ ÈÄ redirectµÇ¸é query·Î ÀÓ½Ã ÀÎÁõÄÚµå Æ÷ÇÔ
-    const tokenUrl = 'https://kauth.kakao.com/oauth/token';
-    const params: any = new URLSearchParams();
-    params.append('grant_type', 'authorization_code');
-    params.append('client_id', process.env.REST_API_KEY);
-    params.append('redirect_uri', `${process.env.HOST}/auth/login/kakao/callback`);
-    params.append('code', code as string);
-    // params.append('client_secret', "º¸¾È°­È­¸¦ À§ÇÑ Ãß°¡ È®ÀÎ ÄÚµå")
+    const { code } = req.query; // ì¸ì¦ í›„ redirectë˜ë©´ queryë¡œ ì„ì‹œ ì¸ì¦ì½”ë“œ í¬í•¨
+    if (!code) {
+      console.error('ì¸ì¦ ì½”ë“œ ëˆ„ë½');
+      return res.redirect('/');
+    }
 
-    token = await axios({
-      method: "POST",
-      url: tokenUrl,
+    const tokenUrl = 'https://kauth.kakao.com/oauth/token';
+    const params = new URLSearchParams();
+    params.append('grant_type', 'authorization_code');
+    params.append('client_id', process.env.REST_API_KEY || '');
+    params.append('redirect_uri', `${process.env.HOST}/auth/kakao/callback`);
+    params.append('code', code as string);
+
+    const tokenResponse = await axios.post(tokenUrl, params.toString(), {
       headers: {
         "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
       },
-      data: params
     });
 
+    token = tokenResponse.data;
+    if (!token.access_token) {
+      console.error("ì•¡ì„¸ìŠ¤ í† í° ëˆ„ë½");
+      return res.redirect('/');
+    }
+
   } catch (error) {
-    console.error('Error occurred while obtaining access token:', error);
-    res.status(500).send('Internal Server Error');
-    return;
-  }
-
-  let userInfo: any;
-  try {
-    userInfo = await axios({
-      method: "GET",
-      url: "https://kapi.kakao.com/v2/user/me",
-      headers: {
-        Authorization: `Bearer ${token.access_token}`,// post ¿äÃ»À¸·Î »ç¿ëÀÚ access token °ªÀ» ¹ŞÀ½
-      },
-    });
-
-    //console.log(userInfo.data);
-    //´Ù¸¥ Á¤º¸µµ Ãß°¡·Î °¡Á®¿Ã ¼ö ÀÖÀ½
-    const { id, properties } = userInfo.data;
-    const nickname = properties.nickname;
-
-    res.send(`Hello, ${nickname}!`);
-  } catch (error) {
-    console.error('Error occurred while fetching user information:', error);
-    res.status(500).send('Internal Server Error');
+    console.error('í† í° ìˆ˜ì§‘ ì¤‘ ì˜¤ë¥˜ ë°œìƒ:', error);
+    return res.status(500).send('Internal Server Error');
   }
 });
-
 
 export { router };
