@@ -1,18 +1,23 @@
 {
     "compilerOptions": {
+      "sourceMap": true,
       "target": "ES6",
+      "outDir": "dist",
+      "alwaysStrict": true,
+      "noImplicitAny": true,
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
-      "module": "CommonJS",
+      "module": "commonjs",
       "moduleResolution": "node",
       "resolveJsonModule": true,
       "esModuleInterop": true,
       "strict": true,
-      "noImplicitAny": true,
       "skipLibCheck": true,
-      "outDir": "dist",
-      "sourceMap": true,
-      "removeComments": true
+      "removeComments": true,
+      "allowSyntheticDefaultImports": true
+      
     },
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules"],
   }
+
+  

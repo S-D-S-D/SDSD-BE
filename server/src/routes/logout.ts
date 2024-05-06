@@ -1,47 +1,47 @@
-import express from 'express';
-import axios from 'axios';
-import dotenv from 'dotenv';
+// import express from 'express';
+// import axios from 'axios';
+// import dotenv from 'dotenv';
 
-dotenv.config();// »ç½Ç ¹ºÁö Àß ¸ğ¸£°ÚÀ½ envÆÄÀÏÀ» ºÒ·¯¿Â´ÙÇÔ
-const router = express.Router();
+// dotenv.config();// ì‚¬ì‹¤ ë­”ì§€ ì˜ ëª¨ë¥´ê² ìŒ envíŒŒì¼ì„ ë¶ˆëŸ¬ì˜¨ë‹¤í•¨
+// const router = express.Router();
 
-router.get('/logout/kakao/', async (req, res) => {
-    let logout: any;
-    try {
-        const params: any = new URLSearchParams();
-        params.append('client_id', process.env.REST_API_KEY),
-        params.append('logout_redirect_uri', process.env.host),// ÀÓ½Ã·Î logoutRedirectURLµî·Ï
-        logout = await axios({
-            method: "GET",
-            url: "https://kauth.kakao.com/oauth/logout",
-            data: params
-        });
+// router.get('/logout/kakao/', async (req, res) => {
+//     let logout: any;
+//     try {
+//         const params: any = new URLSearchParams();
+//         params.append('client_id', process.env.REST_API_KEY),
+//         params.append('logout_redirect_uri', process.env.host),// ì„ì‹œë¡œ logoutRedirectURLë“±ë¡
+//         logout = await axios({
+//             method: "GET",
+//             url: "https://kauth.kakao.com/oauth/logout",
+//             data: params
+//         });
   
-    } catch (error) {
-      console.error('Error occurred while obtaining access token:', error);
-      res.status(500).send('Internal Server Error');
-      return;
-    }
-    //unlinkÇÒ¶§ router¸¦ µû·Î ³ª´²¾ß ÇÒ±î?
+//     } catch (error) {
+//       console.error('Error occurred while obtaining access token:', error);
+//       res.status(500).send('Internal Server Error');
+//       return;
+//     }
+//     //unlinkí• ë•Œ routerë¥¼ ë”°ë¡œ ë‚˜ëˆ ì•¼ í• ê¹Œ?
 
-    let unlink: any;
-    try {
-        const params: any = new URLSearchParams();
-        params.append('client_id', process.env.REST_API_KEY),
-        params.append('logout_redirect_uri', process.env.host),// ÀÓ½Ã·Î logoutRedirectURLµî·Ï
-        unlink = await axios({
-            method: "POST",
-            url: "https://kapi.kakao.com/v1/user/unlink",
-            headers: {
-                //Authorization: `Bearer ${token.access_token}`, token°ª ÀúÀåÇÏ°í ¹Ş¾Æ¿À´Â °É ÇØ¾ßÇÏ³ª? ÀÏ´Ü ÀÛ¼ºÇÏ°í ³ªÁß¿¡ »ı°¢
-              },
-        });
+//     let unlink: any;
+//     try {
+//         const params: any = new URLSearchParams();
+//         params.append('client_id', process.env.REST_API_KEY),
+//         params.append('logout_redirect_uri', process.env.host),// ì„ì‹œë¡œ logoutRedirectURLë“±ë¡
+//         unlink = await axios({
+//             method: "POST",
+//             url: "https://kapi.kakao.com/v1/user/unlink",
+//             headers: {
+//                 //Authorization: `Bearer ${token.access_token}`, tokenê°’ ì €ì¥í•˜ê³  ë°›ì•„ì˜¤ëŠ” ê±¸ í•´ì•¼í•˜ë‚˜? ì¼ë‹¨ ì‘ì„±í•˜ê³  ë‚˜ì¤‘ì— ìƒê°
+//               },
+//         });
   
-    } catch (error) {
-      console.error('Error occurred while obtaining access token:', error);
-      res.status(500).send('Internal Server Error');
-      return;
-    }
-  });
+//     } catch (error) {
+//       console.error('Error occurred while obtaining access token:', error);
+//       res.status(500).send('Internal Server Error');
+//       return;
+//     }
+//   });
 
   
